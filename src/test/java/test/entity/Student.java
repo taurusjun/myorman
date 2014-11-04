@@ -1,5 +1,7 @@
 package test.entity;
 
+import java.util.Date;
+
 import org.orman.mapper.Model;
 import org.orman.mapper.annotation.Entity;
 import org.orman.mapper.annotation.PrimaryKey;
@@ -10,8 +12,8 @@ class Student extends Model<Student> {
 	public int id;
 	public String name;
 
-	// public Date registrationDate;
-	// public float gpa;
+	public Date registrationDate;
+	public float gpa;
 
 	public Student() {
 
