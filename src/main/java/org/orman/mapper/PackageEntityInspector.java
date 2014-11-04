@@ -19,7 +19,7 @@ import org.orman.util.logging.Log;
  */
 public class PackageEntityInspector {
 	private static boolean recursiveScan = true;
-	
+
 	@SuppressWarnings("rawtypes")
 	private static Class<?> getClassFor(File classFile, String packageName) {
 		String fileName = classFile.getName();
@@ -29,8 +29,8 @@ public class PackageEntityInspector {
 		if (fileName.endsWith(".class")) {
 			try {
 				className = packageName != null ? packageName + "." : "";
-				className += fileName.substring(0,fileName.length()-6);
-				
+				className += fileName.substring(0, fileName.length() - 6);
+
 				classObj = Class.forName(className);
 			} catch (ClassNotFoundException e) {
 				return null;
@@ -49,7 +49,8 @@ public class PackageEntityInspector {
 				if (!classFile.isDirectory())
 					classes.add(getClassFor(classFile, packageName));
 				else if (recursiveScan)
-					classes.addAll(populateClasses(classFile, packageName));
+					classes.addAll(populateClasses(classFile, packageName + "."
+							+ classFile.getName()));
 			}
 		}
 
@@ -77,10 +78,10 @@ public class PackageEntityInspector {
 
 		if (classLoader == null)
 			return null;
-		
+
 		if (packageName == null)
-			packageUrl = "./"; //Search into root class path
-		else 
+			packageUrl = "./"; // Search into root class path
+		else
 			packageUrl = packageName.replace('.', '/');
 
 		try {
@@ -107,33 +108,34 @@ public class PackageEntityInspector {
 			}
 
 			annotatedClasses = populateClasses(new File(fileName), packageName);
-			
+
 			for (Class<?> currentClass : annotatedClasses) {
-				// currentClass becomes null for non-Java files in package. 
+				// currentClass becomes null for non-Java files in package.
 				// and may throw NullPointerException. make null-check.
-				if (currentClass != null && currentClass
-						.isAnnotationPresent(org.orman.mapper.annotation.Entity.class)) {
+				if (currentClass != null
+						&& currentClass
+								.isAnnotationPresent(org.orman.mapper.annotation.Entity.class)) {
 					classObjects.add(currentClass);
 				}
 			}
 		}
-		
+
 		return classObjects.size() == 0 ? null : classObjects;
 	}
-	
+
 	public static String getWorkingRootPackageName() {
 		int i;
-		
+
 		StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
-		String rootClass = callStack[callStack.length-1].getClassName();
-		
+		String rootClass = callStack[callStack.length - 1].getClassName();
+
 		i = rootClass.indexOf('.');
-		
+
 		if (i == -1) {
 			recursiveScan = false;
 			return null;
 		}
-		
-		return rootClass.substring(0,i);
+
+		return rootClass.substring(0, i);
 	}
 }

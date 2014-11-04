@@ -9,6 +9,12 @@ class Student extends Model<Student> {
 	@PrimaryKey(autoIncrement = true)
 	public int id;
 	public String name;
+
 	// public Date registrationDate;
 	// public float gpa;
+
+	public Student() {
+
+	}
+
 }
